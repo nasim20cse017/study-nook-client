@@ -20,7 +20,7 @@ export const WhyChooseUs = () => {
     },
     {
       icon: <FiCoffee size={26} />,
-      title: "Comfortable Environment",
+      title: "Comfort Zone",
       description:
         "Relaxing and quiet spaces designed for maximum productivity.",
       color: "from-orange-400 to-orange-500",
@@ -50,9 +50,9 @@ export const WhyChooseUs = () => {
   return (
     <section className="relative overflow-hidden py-24">
       {/* Blur */}
-      <div className="absolute top-10 left-0 h-72 w-72 rounded-full bg-pink-300/20 blur-3xl"></div>
+      {/* <div className="absolute top-10 left-0 h-72 w-72 rounded-full bg-pink-300/20 blur-3xl"></div>
 
-      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-orange-300/20 blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-orange-300/20 blur-3xl"></div> */}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}

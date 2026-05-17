@@ -7,9 +7,9 @@ const Banner = () => {
   return (
     <section className="relative overflow-hidden">
       {/* Decorative Blur */}
-      <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-pink-300/20 blur-3xl"></div>
+      {/* <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-pink-300/20 blur-3xl"></div>
 
-      <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full bg-orange-300/20 blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full bg-orange-300/20 blur-3xl"></div> */}
 
       {/* Main Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
