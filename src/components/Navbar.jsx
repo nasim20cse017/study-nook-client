@@ -31,7 +31,7 @@ const Navbar = () => {
           className="flex items-center gap-3 transition-transform duration-300 hover:scale-[1.02]"
         >
           <Image
-            src="/assets/studyNook.png"
+            src="/assets/studyNook_Logo.png"
             width={180}
             height={60}
             alt="StudyNook Logo"
