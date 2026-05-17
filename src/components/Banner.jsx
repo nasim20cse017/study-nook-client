@@ -2,14 +2,10 @@
 
 import Link from "next/link";
 import { FiArrowRight, FiBookOpen, FiHome, FiUsers } from "react-icons/fi";
-import 'animate.css';
 
 const Banner = () => {
   return (
-    <section className="relative overflow-hidden bg-white">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-orange-50"></div>
-
+    <section className="relative overflow-hidden">
       {/* Decorative Blur */}
       <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-pink-300/20 blur-3xl"></div>
 
@@ -21,7 +17,7 @@ const Banner = () => {
           {/* Left Content */}
           <div>
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-pink-200 bg-white px-5 py-2 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/70 backdrop-blur-xl px-5 py-2 shadow-lg">
               <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-pink-500 to-orange-500"></span>
 
               <p className="text-sm font-semibold text-gray-700">
@@ -32,7 +28,7 @@ const Banner = () => {
             {/* Heading */}
             <h1 className="mt-8 text-5xl md:text-6xl lg:text-7xl font-black leading-tight text-gray-900">
               Find Your
-              <span className="block bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500 bg-clip-text text-transparent">
                 Perfect Study Room
               </span>
             </h1>
@@ -47,7 +43,7 @@ const Banner = () => {
             {/* Buttons */}
             <div className="mt-10 flex flex-col sm:flex-row gap-5">
               <Link href="/rooms">
-                <button className="group flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 px-8 py-4 text-sm font-bold uppercase tracking-wide text-white shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-pink-300/40">
+                <button className="group flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 px-8 py-4 text-sm font-bold uppercase tracking-wide text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-pink-300/50">
                   Explore Rooms
 
                   <FiArrowRight
@@ -58,7 +54,7 @@ const Banner = () => {
               </Link>
 
               <Link href="/about">
-                <button className="rounded-2xl border border-gray-200 bg-white px-8 py-4 text-sm font-bold uppercase tracking-wide text-gray-700 shadow-sm transition-all duration-300 hover:border-pink-300 hover:text-pink-500 hover:shadow-md">
+                <button className="rounded-2xl border border-white/50 bg-white/70 backdrop-blur-xl px-8 py-4 text-sm font-bold uppercase tracking-wide text-gray-700 shadow-lg transition-all duration-300 hover:border-pink-300 hover:text-pink-500 hover:shadow-xl">
                   Learn More
                 </button>
               </Link>
@@ -66,73 +62,64 @@ const Banner = () => {
 
             {/* Stats */}
             <div className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-5">
-              <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm hover:shadow-md transition-all duration-300">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-2xl bg-pink-100 p-3 text-pink-500">
-                    <FiHome size={22} />
-                  </div>
+              {[
+                {
+                  icon: <FiHome size={22} />,
+                  title: "500+",
+                  subtitle: "Study Rooms",
+                  bg: "bg-pink-100",
+                  text: "text-pink-500",
+                },
+                {
+                  icon: <FiUsers size={22} />,
+                  title: "10K+",
+                  subtitle: "Happy Students",
+                  bg: "bg-orange-100",
+                  text: "text-orange-500",
+                },
+                {
+                  icon: <FiBookOpen size={22} />,
+                  title: "24/7",
+                  subtitle: "Easy Booking",
+                  bg: "bg-yellow-100",
+                  text: "text-yellow-500",
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="rounded-3xl border border-white/40 bg-white/70 backdrop-blur-xl p-5 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`rounded-2xl ${item.bg} p-3 ${item.text}`}
+                    >
+                      {item.icon}
+                    </div>
 
-                  <div>
-                    <h3 className="text-2xl font-black text-gray-900">
-                      500+
-                    </h3>
+                    <div>
+                      <h3 className="text-2xl font-black text-gray-900">
+                        {item.title}
+                      </h3>
 
-                    <p className="text-sm text-gray-500">
-                      Study Rooms
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm hover:shadow-md transition-all duration-300">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-2xl bg-orange-100 p-3 text-orange-500">
-                    <FiUsers size={22} />
-                  </div>
-
-                  <div>
-                    <h3 className="text-2xl font-black text-gray-900">
-                      10K+
-                    </h3>
-
-                    <p className="text-sm text-gray-500">
-                      Happy Students
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm hover:shadow-md transition-all duration-300">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-2xl bg-yellow-100 p-3 text-yellow-500">
-                    <FiBookOpen size={22} />
-                  </div>
-
-                  <div>
-                    <h3 className="text-2xl font-black text-gray-900">
-                      24/7
-                    </h3>
-
-                    <p className="text-sm text-gray-500">
-                      Easy Booking
-                    </p>
+                      <p className="text-sm text-gray-500">
+                        {item.subtitle}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
 
           {/* Right Side Image */}
           <div className="relative">
-            {/* Main Card */}
-            <div className="relative overflow-hidden rounded-[40px] border border-white/40 bg-white shadow-2xl">
+            <div className="relative overflow-hidden rounded-[40px] border border-white/40 bg-white/40 backdrop-blur-xl shadow-2xl">
               <img
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop"
                 alt="Study Room"
                 className="h-[650px] w-full object-cover"
               />
 
-              {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
 
               {/* Floating Card */}
@@ -155,7 +142,7 @@ const Banner = () => {
               </div>
             </div>
 
-            {/* Decorative Elements */}
+            {/* Decorative Glow */}
             <div className="absolute -top-6 -right-6 h-24 w-24 rounded-3xl bg-gradient-to-r from-pink-500 to-orange-500 opacity-20 blur-2xl"></div>
 
             <div className="absolute -bottom-6 -left-6 h-24 w-24 rounded-3xl bg-gradient-to-r from-orange-400 to-pink-400 opacity-20 blur-2xl"></div>
