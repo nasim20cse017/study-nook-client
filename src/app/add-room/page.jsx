@@ -8,7 +8,6 @@ import {
   TextField,
   Button,
   Card,
-  Checkbox,
 } from "@heroui/react";
 
 import { useState } from "react";
@@ -48,7 +47,70 @@ const AddRoomPage = () => {
     );
   };
 
-  
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    setIsPending(true);
+
+    try {
+      const formData = new FormData(e.currentTarget);
+
+      const room = Object.fromEntries(formData.entries());
+
+      room.capacity = Number(room.capacity);
+
+      room.hourlyRate = Number(room.hourlyRate);
+
+      room.amenities = selectedAmenities;
+
+      console.log("New Room:", room);
+
+      const res = await fetch("http://localhost:5001/rooms", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(room),
+      });
+
+      const data = await res.json();
+
+      console.log(data);
+
+      if (data.insertedId) {
+        toast.success("Room added successfully", {
+          position: "top-right",
+          autoClose: 2000,
+          theme: "colored",
+        });
+
+        e.target.reset();
+
+        setSelectedAmenities([]);
+
+        setTimeout(() => {
+          router.push("/rooms");
+          router.refresh();
+        }, 1500);
+      } else {
+        toast.error("Failed to add room!", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Something went wrong!", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "colored",
+      });
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <section className="relative overflow-hidden py-16">
@@ -62,7 +124,7 @@ const AddRoomPage = () => {
 
       <div className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Heading */}
-        <div className="mb-8 max-w-3xl mx-auto text-center">
+        <div className="mx-auto mb-8 max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-pink-200 bg-white px-5 py-2 shadow-sm">
             <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-pink-500 to-orange-500"></span>
 
@@ -87,7 +149,7 @@ const AddRoomPage = () => {
         {/* Form Card */}
         <Card className="overflow-hidden rounded-[35px] border border-white/40 bg-white/80 shadow-2xl backdrop-blur-xl">
           <form
-           
+            onSubmit={onSubmit}
             className="space-y-10 p-6 md:p-10 lg:p-14"
           >
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -98,13 +160,14 @@ const AddRoomPage = () => {
                     Room Name
                   </Label>
 
-                  <Input
-                    placeholder="Quiet Premium Study Room"
-                    className="rounded-2xl"
-                    startContent={
-                      <FiHome className="text-pink-500" />
-                    }
-                  />
+                  <div className="relative">
+                    <FiHome className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-pink-500" />
+
+                    <Input
+                      placeholder="Quiet Premium Study Room"
+                      className="rounded-2xl pl-12 w-full"
+                    />
+                  </div>
 
                   <FieldError />
                 </TextField>
@@ -116,13 +179,14 @@ const AddRoomPage = () => {
                   Floor
                 </Label>
 
-                <Input
-                  placeholder="3rd Floor"
-                  className="rounded-2xl"
-                  startContent={
-                    <FiLayers className="text-orange-500" />
-                  }
-                />
+                <div className="relative">
+                  <FiLayers className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-orange-500" />
+
+                  <Input
+                    placeholder="3rd Floor"
+                    className="rounded-2xl pl-12 w-full"
+                  />
+                </div>
 
                 <FieldError />
               </TextField>
@@ -137,14 +201,15 @@ const AddRoomPage = () => {
                   Capacity
                 </Label>
 
-                <Input
-                  type="number"
-                  placeholder="4"
-                  className="rounded-2xl"
-                  startContent={
-                    <FiUsers className="text-pink-500" />
-                  }
-                />
+                <div className="relative">
+                  <FiUsers className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-pink-500" />
+
+                  <Input
+                    type="number"
+                    placeholder="4"
+                    className="rounded-2xl pl-12 w-full"
+                  />
+                </div>
 
                 <FieldError />
               </TextField>
@@ -159,14 +224,15 @@ const AddRoomPage = () => {
                   Hourly Rate ($)
                 </Label>
 
-                <Input
-                  type="number"
-                  placeholder="5"
-                  className="rounded-2xl"
-                  startContent={
-                    <FiDollarSign className="text-orange-500" />
-                  }
-                />
+                <div className="relative">
+                  <FiDollarSign className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-orange-500" />
+
+                  <Input
+                    type="number"
+                    placeholder="5"
+                    className="rounded-2xl pl-12 w-full"
+                  />
+                </div>
 
                 <FieldError />
               </TextField>
@@ -178,14 +244,15 @@ const AddRoomPage = () => {
                     Image URL
                   </Label>
 
-                  <Input
-                    type="url"
-                    placeholder="https://example.com/room.jpg"
-                    className="rounded-2xl"
-                    startContent={
-                      <FiImage className="text-pink-500" />
-                    }
-                  />
+                  <div className="relative">
+                    <FiImage className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-pink-500" />
+
+                    <Input
+                      type="url"
+                      placeholder="https://example.com/room.jpg"
+                      className="rounded-2xl pl-12 w-full"
+                    />
+                  </div>
 
                   <FieldError />
                 </TextField>
@@ -200,7 +267,7 @@ const AddRoomPage = () => {
 
                   <TextArea
                     placeholder="Describe your study room environment, facilities, and atmosphere..."
-                    className="min-h-[180px] rounded-3xl"
+                    className="min-h-[180px] rounded-3xl w-full"
                   />
 
                   <FieldError />
@@ -213,7 +280,7 @@ const AddRoomPage = () => {
                   Amenities
                 </Label>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {amenitiesOptions.map((amenity) => {
                     const isSelected =
                       selectedAmenities.includes(amenity);
