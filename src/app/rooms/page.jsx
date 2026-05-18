@@ -11,9 +11,12 @@ import {
 } from "react-icons/fi";
 
 const RoomsPage = async () => {
-  let rooms = [];
 
-  
+  const res = await fetch("http://localhost:5001/rooms", {
+    cache: "no-store",
+  });
+
+  const rooms = await res.json();
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-white">
