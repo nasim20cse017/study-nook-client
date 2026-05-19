@@ -91,7 +91,6 @@ const LoginPage = () => {
   };
 
   
-
   return (
     <section className="relative flex items-center justify-center overflow-hidden bg-white px-4 py-16">
       {/* Background */}

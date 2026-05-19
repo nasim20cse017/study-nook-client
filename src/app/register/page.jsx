@@ -91,7 +91,32 @@ const RegisterPage = () => {
     }
   };
 
-  
+  // Google Signin
+  const handleGoogleSignin = async () => {
+    try {
+      setGooglePending(true);
+
+      await authClient.signIn.social({
+        provider: "google",
+      });
+
+      toast.success("Connecting with Google...", {
+        position: "top-right",
+        autoClose: 2000,
+        theme: "colored",
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Google sign in failed!", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "colored",
+      });
+    } finally {
+      setGooglePending(false);
+    }
+  };
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-4 py-16">
@@ -294,6 +319,7 @@ const RegisterPage = () => {
 
         {/* Google Button */}
         <Button
+          onClick={handleGoogleSignin}
           isDisabled={googlePending}
           variant="outline"
           className="h-14 w-full rounded-2xl border border-gray-200 bg-white text-base font-semibold text-gray-700 transition-all duration-300 hover:border-pink-300 hover:bg-pink-50 hover:shadow-lg"
