@@ -186,7 +186,6 @@ const LoginPage = () => {
 
         {/* Google Login */}
         <Button
-          
           isDisabled={googlePending}
           variant="outline"
           className="h-14 w-full rounded-2xl border border-gray-200 bg-white text-base font-semibold text-gray-700 transition-all duration-300 hover:border-pink-300 hover:bg-pink-50 hover:shadow-lg"

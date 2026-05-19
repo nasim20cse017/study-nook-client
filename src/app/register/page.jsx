@@ -26,6 +26,7 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -41,8 +42,10 @@ const RegisterPage = () => {
 
     setIsPending(true);
 
-   
+    
   };
+
+  
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-4 py-16">
@@ -245,7 +248,6 @@ const RegisterPage = () => {
 
         {/* Google Button */}
         <Button
-          
           isDisabled={googlePending}
           variant="outline"
           className="h-14 w-full rounded-2xl border border-gray-200 bg-white text-base font-semibold text-gray-700 transition-all duration-300 hover:border-pink-300 hover:bg-pink-50 hover:shadow-lg"
