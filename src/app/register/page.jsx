@@ -42,7 +42,53 @@ const RegisterPage = () => {
 
     setIsPending(true);
 
-    
+    try {
+      const formData = new FormData(e.currentTarget);
+
+      const user = Object.fromEntries(formData.entries());
+
+      const { data, error } = await authClient.signUp.email({
+        email: user.email,
+        password: user.password,
+        name: user.name,
+        image: user.image,
+      });
+
+      // Success
+      if (data) {
+        toast.success("Account created successfully 🎉", {
+          position: "top-right",
+          autoClose: 2500,
+          theme: "colored",
+        });
+
+        e.target.reset();
+
+        setTimeout(() => {
+          router.push("/login");
+          router.refresh();
+        }, 1500);
+      }
+
+      // Error
+      if (error) {
+        toast.error(error.message || "Signup failed!", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      }
+    } catch (err) {
+      console.error(err);
+
+      toast.error("Something went wrong!", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "colored",
+      });
+    } finally {
+      setIsPending(false);
+    }
   };
 
   
