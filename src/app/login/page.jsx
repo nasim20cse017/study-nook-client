@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
@@ -27,21 +27,13 @@ import {
   Label,
   TextField,
 } from "@heroui/react";
+import { authClient } from "@/lib/auth-client";
 
 const LoginPage = () => {
   const router = useRouter();
 
-  const searchParams = useSearchParams();
-
-  // Redirect Route
-  const redirectPath =
-    searchParams.get("redirect") || "/";
-
-  const [isPending, setIsPending] =
-    useState(false);
-
-  const [googlePending, setGooglePending] =
-    useState(false);
+  const [isPending, setIsPending] = useState(false);
+  const [googlePending, setGooglePending] = useState(false);
 
   // Email Login
   const onSubmit = async (e) => {
@@ -49,8 +41,56 @@ const LoginPage = () => {
 
     setIsPending(true);
 
-    
+    try {
+      const formData = new FormData(e.currentTarget);
+
+      const user = Object.fromEntries(formData.entries());
+
+      const { data, error } = await authClient.signIn.email({
+        email: user.email,
+        password: user.password,
+      });
+
+      console.log({ data, error });
+
+      // Success
+      if (data) {
+        toast.success("Login successful 🎉", {
+          position: "top-right",
+          autoClose: 2500,
+          theme: "colored",
+        });
+
+        e.target.reset();
+
+        setTimeout(() => {
+          router.push("/");
+          router.refresh();
+        }, 1500);
+      }
+
+      // Error
+      if (error) {
+        toast.error(error.message || "Login failed!", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      }
+    } catch (err) {
+      console.error(err);
+
+      toast.error("Something went wrong!", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "colored",
+      });
+    } finally {
+      setIsPending(false);
+    }
   };
+
+  
 
   return (
     <section className="relative flex items-center justify-center overflow-hidden bg-white px-4 py-16">
