@@ -2,6 +2,8 @@ import Banner from "@/components/Banner";
 import { CommunitySection } from "@/components/CommunitySection";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 
+
+
 export default function Home() {
   return (
     <main className="relative overflow-hidden bg-gradient-to-br from-pink-50 via-white to-orange-50">
