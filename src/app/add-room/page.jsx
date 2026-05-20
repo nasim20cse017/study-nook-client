@@ -22,6 +22,7 @@ import {
   FiDollarSign,
   FiUsers,
 } from "react-icons/fi";
+import { authClient } from "@/lib/auth-client";
 
 const amenitiesOptions = [
   "Whiteboard",
@@ -34,6 +35,10 @@ const amenitiesOptions = [
 
 const AddRoomPage = () => {
   const router = useRouter();
+
+   // Fetch logged in user
+  const { data: session, isPending: sessionLoading } =
+    authClient.useSession();
 
   const [isPending, setIsPending] = useState(false);
 
@@ -50,6 +55,17 @@ const AddRoomPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    // Prevent submit if user not logged in
+    if (!session?.user?.email) {
+      toast.error("Please login first!", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "colored",
+      });
+
+      return;
+    }
+
     setIsPending(true);
 
     try {
@@ -62,6 +78,17 @@ const AddRoomPage = () => {
       room.hourlyRate = Number(room.hourlyRate);
 
       room.amenities = selectedAmenities;
+
+       // Add owner Name
+      room.ownerName = session.user.name;
+
+       // Add owner email
+      room.ownerEmail = session.user.email;
+
+      // Optional metadata
+      room.createdAt = new Date();
+
+      
 
       console.log("New Room:", room);
 
@@ -111,6 +138,17 @@ const AddRoomPage = () => {
       setIsPending(false);
     }
   };
+
+  // Loading session
+  if (sessionLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-lg font-semibold text-gray-600">
+          Loading...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <section className="relative overflow-hidden py-16">
