@@ -16,7 +16,7 @@ const getTodayDate = () => {
 
 export function BookingCard({ room }) {
   const router = useRouter();
-  const { _id: roomId, hourlyRate, roomName } = room;
+  const { _id: roomId, hourlyRate, roomName, description, image, capacity, floor } = room;
 
   // Better Auth session
   const { data: session, isPending: sessionIsPending } = authClient.useSession();
@@ -109,9 +109,15 @@ export function BookingCard({ room }) {
     try {
       const bookingData = {
         roomId,
+        roomName,
+        description,
+        image,
+        capacity,
+        floor,
         date,
         startTime,
         endTime,
+        totalCost,
         specialNote,
         userId: session.user.id,
         userEmail: session.user.email,
