@@ -10,245 +10,272 @@ import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 
 import {
-  FiMail,
-  FiLock,
-  FiLogIn,
-  FiArrowRight,
+    FiMail,
+    FiLock,
+    FiLogIn,
+    FiArrowRight,
 } from "react-icons/fi";
 
 import {
-  Card,
-  Separator,
-  Button,
-  Description,
-  FieldError,
-  Form,
-  Input,
-  Label,
-  TextField,
+    Card,
+    Separator,
+    Button,
+    Description,
+    FieldError,
+    Form,
+    Input,
+    Label,
+    TextField,
 } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
 
 const LoginPage = () => {
-  const router = useRouter();
+    const router = useRouter();
 
-  const [isPending, setIsPending] = useState(false);
-  const [googlePending, setGooglePending] = useState(false);
+    const [isPending, setIsPending] = useState(false);
+    const [googlePending, setGooglePending] = useState(false);
 
-  // Email Login
-  const onSubmit = async (e) => {
-    e.preventDefault();
+    // Email Login
+    const onSubmit = async (e) => {
+        e.preventDefault();
 
-    setIsPending(true);
+        setIsPending(true);
 
-    try {
-      const formData = new FormData(e.currentTarget);
+        try {
+            const formData = new FormData(e.currentTarget);
 
-      const user = Object.fromEntries(formData.entries());
+            const user = Object.fromEntries(formData.entries());
 
-      const { data, error } = await authClient.signIn.email({
-        email: user.email,
-        password: user.password,
-      });
+            const { data, error } = await authClient.signIn.email({
+                email: user.email,
+                password: user.password,
+            });
 
-      console.log({ data, error });
+            console.log({ data, error });
 
-      // Success
-      if (data) {
-        toast.success("Login successful 🎉", {
-          position: "top-right",
-          autoClose: 2500,
-          theme: "colored",
-        });
+            // Success
+            if (data) {
+                toast.success("Login successful 🎉", {
+                    position: "top-right",
+                    autoClose: 2500,
+                    theme: "colored",
+                });
 
-        e.target.reset();
+                e.target.reset();
 
-        setTimeout(() => {
-          router.push("/");
-          router.refresh();
-        }, 1500);
-      }
+                setTimeout(() => {
+                    router.push("/");
+                    router.refresh();
+                }, 1500);
+            }
 
-      // Error
-      if (error) {
-        toast.error(error.message || "Login failed!", {
-          position: "top-right",
-          autoClose: 3000,
-          theme: "colored",
-        });
-      }
-    } catch (err) {
-      console.error(err);
+            // Error
+            if (error) {
+                toast.error(error.message || "Login failed!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    theme: "colored",
+                });
+            }
+        } catch (err) {
+            console.error(err);
 
-      toast.error("Something went wrong!", {
-        position: "top-right",
-        autoClose: 3000,
-        theme: "colored",
-      });
-    } finally {
-      setIsPending(false);
-    }
-  };
+            toast.error("Something went wrong!", {
+                position: "top-right",
+                autoClose: 3000,
+                theme: "colored",
+            });
+        } finally {
+            setIsPending(false);
+        }
+    };
 
-  
-  return (
-    <section className="relative flex items-center justify-center overflow-hidden bg-white px-4 py-16">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-orange-50"></div>
+    // Google Login
+    const handleGoogleSignin = async () => {
+        try {
+            setGooglePending(true);
 
-      {/* Blur Effects */}
-      <div className="absolute -left-24 top-0 h-96 w-96 rounded-full bg-pink-300/20 blur-3xl"></div>
+            await authClient.signIn.social({
+                provider: "google",
+            });
 
-      <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-orange-300/20 blur-3xl"></div>
+            toast.success("Connecting with Google...", {
+                position: "top-right",
+                autoClose: 2000,
+                theme: "colored",
+            });
+        } catch (error) {
+            console.error(error);
 
-      {/* Login Card */}
-      <Card className="relative z-10 w-full max-w-xl overflow-hidden rounded-[36px] border border-white/40 bg-white/80 p-6 shadow-2xl backdrop-blur-xl sm:p-10">
-        {/* Header */}
-        <div className="mb-10 text-center">
-          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-[28px] bg-gradient-to-r from-pink-500 to-orange-500 shadow-xl">
-            <FiLogIn
-              className="text-white"
-              size={42}
-            />
-          </div>
+            toast.error("Google sign in failed!", {
+                position: "top-right",
+                autoClose: 3000,
+                theme: "colored",
+            });
+        } finally {
+            setGooglePending(false);
+        }
+    };
 
-          <h1 className="mt-6 text-4xl font-black text-gray-900">
-            Welcome Back
-          </h1>
+    return (
+        <section className="relative flex items-center justify-center overflow-hidden bg-white px-4 py-16">
+            {/* Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-orange-50"></div>
 
-          <p className="mt-3 text-base leading-7 text-gray-600">
-            Login to continue booking your
-            favorite study rooms with
-            StudyNook.
-          </p>
-        </div>
+            {/* Blur Effects */}
+            <div className="absolute -left-24 top-0 h-96 w-96 rounded-full bg-pink-300/20 blur-3xl"></div>
 
-        {/* Form */}
-        <Form
-          onSubmit={onSubmit}
-          className="flex flex-col gap-6"
-        >
-          {/* Email */}
-          <TextField
-            isRequired
-            name="email"
-            type="email"
-            validate={(value) => {
-              if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                  value
-                )
-              ) {
-                return "Please enter a valid email address";
-              }
+            <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-orange-300/20 blur-3xl"></div>
 
-              return null;
-            }}
-          >
-            <Label className="mb-3 text-sm font-bold text-gray-700">
-              Email Address
-            </Label>
+            {/* Login Card */}
+            <Card className="relative z-10 w-full max-w-xl overflow-hidden rounded-[36px] border border-white/40 bg-white/80 p-6 shadow-2xl backdrop-blur-xl sm:p-10">
+                {/* Header */}
+                <div className="mb-10 text-center">
+                    <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-[28px] bg-gradient-to-r from-pink-500 to-orange-500 shadow-xl">
+                        <FiLogIn
+                            className="text-white"
+                            size={42}
+                        />
+                    </div>
 
-            <div className="relative">
-              <FiMail
-                className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-pink-500"
-                size={18}
-              />
+                    <h1 className="mt-6 text-4xl font-black text-gray-900">
+                        Welcome Back
+                    </h1>
 
-              <Input
-                placeholder="john@example.com"
-                className="w-full rounded-2xl pl-10"
-              />
-            </div>
+                    <p className="mt-3 text-base leading-7 text-gray-600">
+                        Login to continue booking your
+                        favorite study rooms with
+                        StudyNook.
+                    </p>
+                </div>
 
-            <FieldError />
-          </TextField>
+                {/* Form */}
+                <Form
+                    onSubmit={onSubmit}
+                    className="flex flex-col gap-6"
+                >
+                    {/* Email */}
+                    <TextField
+                        isRequired
+                        name="email"
+                        type="email"
+                        validate={(value) => {
+                            if (
+                                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                                    value
+                                )
+                            ) {
+                                return "Please enter a valid email address";
+                            }
 
-          {/* Password */}
-          <TextField
-            isRequired
-            name="password"
-            type="password"
-          >
-            <Label className="mb-3 text-sm font-bold text-gray-700">
-              Password
-            </Label>
+                            return null;
+                        }}
+                    >
+                        <Label className="mb-3 text-sm font-bold text-gray-700">
+                            Email Address
+                        </Label>
 
-            <div className="relative">
-              <FiLock
-                className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-orange-500"
-                size={18}
-              />
+                        <div className="relative">
+                            <FiMail
+                                className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-pink-500"
+                                size={18}
+                            />
 
-              <Input
-                type="password"
-                placeholder="Enter your password"
-                className="w-full rounded-2xl pl-10"
-              />
-            </div>
+                            <Input
+                                placeholder="john@example.com"
+                                className="w-full rounded-2xl pl-10"
+                            />
+                        </div>
 
-            <Description className="mt-2 text-xs text-gray-500">
-              Enter your registered account
-              password.
-            </Description>
+                        <FieldError />
+                    </TextField>
 
-            <FieldError />
-          </TextField>
+                    {/* Password */}
+                    <TextField
+                        isRequired
+                        name="password"
+                        type="password"
+                    >
+                        <Label className="mb-3 text-sm font-bold text-gray-700">
+                            Password
+                        </Label>
 
-          {/* Login Button */}
-          <Button
-            type="submit"
-            isDisabled={isPending}
-            className="mt-3 h-14 w-full rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 text-base font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-pink-300/40"
-          >
-            {isPending ? (
-              "Logging In..."
-            ) : (
-              <span className="flex items-center gap-2">
-                Login
-                <FiArrowRight size={18} />
-              </span>
-            )}
-          </Button>
-        </Form>
+                        <div className="relative">
+                            <FiLock
+                                className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-orange-500"
+                                size={18}
+                            />
 
-        {/* Divider */}
-        <div className="my-8 flex items-center gap-3">
-          <Separator className="flex-1" />
+                            <Input
+                                type="password"
+                                placeholder="Enter your password"
+                                className="w-full rounded-2xl pl-10"
+                            />
+                        </div>
 
-          <span className="whitespace-nowrap text-sm font-medium text-gray-500">
-            Or continue with
-          </span>
+                        <Description className="mt-2 text-xs text-gray-500">
+                            Enter your registered account
+                            password.
+                        </Description>
 
-          <Separator className="flex-1" />
-        </div>
+                        <FieldError />
+                    </TextField>
 
-        {/* Google Login */}
-        <Button
-          isDisabled={googlePending}
-          variant="outline"
-          className="h-14 w-full rounded-2xl border border-gray-200 bg-white text-base font-semibold text-gray-700 transition-all duration-300 hover:border-pink-300 hover:bg-pink-50 hover:shadow-lg"
-        >
-          <FcGoogle size={24} />
+                    {/* Login Button */}
+                    <Button
+                        type="submit"
+                        isDisabled={isPending}
+                        className="mt-3 h-14 w-full rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 text-base font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-pink-300/40"
+                    >
+                        {isPending ? (
+                            "Logging In..."
+                        ) : (
+                            <span className="flex items-center gap-2">
+                                Login
+                                <FiArrowRight size={18} />
+                            </span>
+                        )}
+                    </Button>
+                </Form>
 
-          {googlePending
-            ? "Connecting..."
-            : "Continue with Google"}
-        </Button>
+                {/* Divider */}
+                <div className="my-8 flex items-center gap-3">
+                    <Separator className="flex-1" />
 
-        {/* Register Link */}
-        <p className="mt-10 text-center text-sm text-gray-600">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/register"
-            className="font-bold text-pink-500 transition-colors duration-300 hover:text-orange-500"
-          >
-            Register
-          </Link>
-        </p>
-      </Card>
-    </section>
-  );
+                    <span className="whitespace-nowrap text-sm font-medium text-gray-500">
+                        Or continue with
+                    </span>
+
+                    <Separator className="flex-1" />
+                </div>
+
+                {/* Google Login */}
+                <Button
+                    onClick={handleGoogleSignin}
+                    isDisabled={googlePending}
+                    variant="outline"
+                    className="h-14 w-full rounded-2xl border border-gray-200 bg-white text-base font-semibold text-gray-700 transition-all duration-300 hover:border-pink-300 hover:bg-pink-50 hover:shadow-lg"
+                >
+                    <FcGoogle size={24} />
+
+                    {googlePending
+                        ? "Connecting..."
+                        : "Continue with Google"}
+                </Button>
+
+                {/* Register Link */}
+                <p className="mt-10 text-center text-sm text-gray-600">
+                    Don&apos;t have an account?{" "}
+                    <Link
+                        href="/register"
+                        className="font-bold text-pink-500 transition-colors duration-300 hover:text-orange-500"
+                    >
+                        Register
+                    </Link>
+                </p>
+            </Card>
+        </section>
+    );
 };
 
 export default LoginPage;
