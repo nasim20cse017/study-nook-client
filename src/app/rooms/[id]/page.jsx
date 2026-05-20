@@ -14,7 +14,7 @@ import {
 } from "react-icons/fi";
 
 import { authClient } from "@/lib/auth-client";
-import EditModal from "@/components/EditModal";
+import { EditModal } from "@/components/EditModal";
 import DeleteAlert from "@/components/DeleteAlert";
 import BookingCard from "@/components/BookingCard";
 import { auth } from "@/lib/auth";
