@@ -34,7 +34,7 @@ const Navbar = () => {
 
   const user = session?.user;
 
-  console.log("Current User:", user);
+  // console.log("Current User:", user);
 
   const pathname = usePathname();
 

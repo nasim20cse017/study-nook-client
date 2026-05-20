@@ -1,4 +1,3 @@
-// src/app/rooms/[id]/page.jsx
 
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +14,11 @@ import {
 } from "react-icons/fi";
 
 import { authClient } from "@/lib/auth-client";
-
+import EditModal from "@/components/EditModal";
+import DeleteAlert from "@/components/DeleteAlert";
+import BookingCard from "@/components/BookingCard";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 
 const RoomDetailsPage = async ({ params }) => {
@@ -46,15 +49,28 @@ const RoomDetailsPage = async ({ params }) => {
     ownerName,
   } = room;
 
-  console.log("Room Data:", room);
   // Session
-  const session = await authClient.getSession();
+ const session = await auth.api.getSession({
+  headers: await headers(),
+});
 
-  const user = session?.data?.user;
+console.log("Current Session:", session);
 
-  // Check Ownership
-  const isOwner =
-    user?.email === ownerEmail;
+// Current User
+const user = session?.user;
+
+console.log("Current User:", user);
+
+// User Name
+const userName = user?.name;
+
+console.log("User Name:", userName);
+
+
+
+//   // Check Ownership
+//   const isOwner =
+//     user?.email === ownerEmail;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-orange-50">
@@ -69,7 +85,7 @@ const RoomDetailsPage = async ({ params }) => {
         </Link>
 
         {/* Top Actions */}
-        {isOwner && (
+        {user?.email === ownerEmail && (
           <div className="mb-6 flex flex-wrap items-center justify-end gap-3">
             <EditModal room={room} />
 
@@ -272,8 +288,8 @@ const RoomDetailsPage = async ({ params }) => {
 
                 <div className="mt-5 flex items-center gap-4">
                   <Image
-                    src="https://freepngimg.com/icon/download/avatars/2167-corporate-user.png"
-                    alt={ownerName || "Owner"}
+                    src={user?.image}
+                    alt={ownerName}
                     width={70}
                     height={70}
                     className="h-16 w-16 rounded-full border-4 border-white object-cover shadow-md"
@@ -281,8 +297,7 @@ const RoomDetailsPage = async ({ params }) => {
 
                   <div>
                     <h4 className="text-lg font-bold text-gray-800">
-                      {ownerName ||
-                        "StudyNook User"}
+                      {ownerName}
                     </h4>
 
                     <p className="text-sm text-gray-500">
@@ -293,7 +308,7 @@ const RoomDetailsPage = async ({ params }) => {
               </div>
 
               {/* Owner Controls */}
-              {isOwner && (
+              {/* {user?.email === ownerEmail && (
                 <div className="rounded-[32px] border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
                   <h3 className="text-2xl font-black text-gray-900">
                     Manage Room
@@ -311,7 +326,7 @@ const RoomDetailsPage = async ({ params }) => {
                     </button>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>

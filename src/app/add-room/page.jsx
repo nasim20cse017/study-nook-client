@@ -85,6 +85,12 @@ const AddRoomPage = () => {
        // Add owner email
       room.ownerEmail = session.user.email;
 
+       // Add owner image
+      room.ownerImage = session.user.image;
+
+       // Add owner email
+      room.ownerEmail = session.user.email;
+
       // Optional metadata
       room.createdAt = new Date();
 
