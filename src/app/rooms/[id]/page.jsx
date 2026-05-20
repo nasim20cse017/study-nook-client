@@ -32,7 +32,17 @@ const RoomDetailsPage = async ({ params }) => {
     }
   );
 
+//   const resp = await fetch("http://localhost:5001/bookings", {
+//     cache: "no-store",
+//   });
+
+//   const bookings = await resp.json();
+
+  
+
   const room = await res.json();
+
+  
 
   // Room Data
   const {
@@ -48,6 +58,18 @@ const RoomDetailsPage = async ({ params }) => {
     ownerEmail,
     ownerName,
   } = room;
+
+  const resp = await fetch(
+  `http://localhost:5001/bookings/${id}`
+);
+
+const data = await resp.json();
+
+const totalBookings = data.total;
+
+
+console.log(data.total);
+
 
   // Session
  const session = await auth.api.getSession({
@@ -142,7 +164,7 @@ console.log("User Name:", userName);
                       <FiBookOpen className="text-pink-400" />
 
                       <span className="text-sm font-medium">
-                        {bookingCount || 0} Bookings
+                        {totalBookings || 0} Bookings
                       </span>
                     </div>
                   </div>
@@ -289,7 +311,7 @@ console.log("User Name:", userName);
                 <div className="mt-5 flex items-center gap-4">
                   <Image
                     src={user?.image}
-                    alt={ownerName}
+                    alt={ownerName || "Owner Image"}
                     width={70}
                     height={70}
                     className="h-16 w-16 rounded-full border-4 border-white object-cover shadow-md"
