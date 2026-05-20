@@ -5,7 +5,6 @@ import {
   FieldError,
   Input,
   Label,
-  Modal,
   TextArea,
   TextField,
 } from "@heroui/react";
@@ -20,6 +19,7 @@ import {
   FiDollarSign,
   FiImage,
   FiCheck,
+  FiX,
 } from "react-icons/fi";
 
 const amenitiesOptions = [
@@ -75,12 +75,11 @@ export function EditModal({ room }) {
       updatedRoom.hourlyRate = Number(updatedRoom.hourlyRate);
       updatedRoom.amenities = selectedAmenities;
 
-      // Keep old image if empty
       if (!updatedRoom.image) {
         updatedRoom.image = image;
       }
 
-      const res = await fetch(`http://localhost:5001/api/rooms/${_id}`, {
+      const res = await fetch(`http://localhost:5001/rooms/${_id}`, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(updatedRoom),
@@ -91,7 +90,7 @@ export function EditModal({ room }) {
       if (res.ok) {
         toast.success("Room updated successfully");
         router.refresh();
-        setIsOpen(false); // close modal on success
+        setIsOpen(false); // ✅ closes modal on success
       } else {
         toast.error(data?.message || "Failed to update room");
       }
@@ -104,8 +103,8 @@ export function EditModal({ room }) {
   };
 
   return (
-    <Modal>
-      {/* Trigger Button – styled like AddRoomPage gradient */}
+    <>
+      {/* Trigger Button */}
       <Button
         onPress={() => setIsOpen(true)}
         className="rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 px-5 py-2 font-semibold text-white shadow-md transition-all hover:scale-[1.01] hover:shadow-lg"
@@ -114,21 +113,30 @@ export function EditModal({ room }) {
         Edit Room
       </Button>
 
-      {/* Modal Backdrop & Container – using your component's API */}
-      <Modal.Backdrop className="bg-black/40 backdrop-blur-sm">
-        <Modal.Container placement="center">
-          <Modal.Dialog className="max-h-[95vh] w-full overflow-hidden rounded-[30px] border border-white/20 bg-white shadow-2xl sm:max-w-3xl">
-            <Modal.CloseTrigger />
-
-            {/* Header – pink/orange gradient background */}
-            <div className="rounded-2xl text-center border-b border-gray-100 bg-gradient-to-r from-pink-50 to-orange-50 px-6 py-5">
+      {/* Modal - only rendered when open */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsOpen(false);
+          }}
+        >
+          <div className="max-h-[95vh] w-full max-w-3xl overflow-hidden rounded-[30px] border border-white/20 bg-white shadow-2xl">
+            {/* Header with close button */}
+            <div className="relative border-b border-gray-100 bg-gradient-to-r from-pink-50 to-orange-50 px-6 py-5">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-500 hover:bg-gray-100"
+              >
+                <FiX size={20} />
+              </button>
               <h2 className="text-2xl font-bold text-gray-800">Edit Room</h2>
               <p className="text-sm text-gray-500">
                 Update your study space details
               </p>
             </div>
 
-            {/* Body */}
+            {/* Form */}
             <form onSubmit={onSubmit} className="space-y-8 p-6">
               {/* Room Name */}
               <TextField name="roomName" defaultValue={roomName} isRequired>
@@ -145,13 +153,10 @@ export function EditModal({ room }) {
                 <FieldError />
               </TextField>
 
-              {/* Two‑column grid for Floor / Capacity / Rate */}
+              {/* Two‑column grid */}
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                {/* Floor */}
                 <TextField name="floor" defaultValue={floor} isRequired>
-                  <Label className="mb-3 text-sm font-bold text-gray-700">
-                    Floor
-                  </Label>
+                  <Label className="mb-3 text-sm font-bold text-gray-700">Floor</Label>
                   <div className="relative">
                     <FiLayers className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-orange-500" />
                     <Input className="rounded-2xl pl-12 w-full" />
@@ -159,16 +164,13 @@ export function EditModal({ room }) {
                   <FieldError />
                 </TextField>
 
-                {/* Capacity */}
                 <TextField
                   name="capacity"
                   defaultValue={capacity}
                   type="number"
                   isRequired
                 >
-                  <Label className="mb-3 text-sm font-bold text-gray-700">
-                    Capacity
-                  </Label>
+                  <Label className="mb-3 text-sm font-bold text-gray-700">Capacity</Label>
                   <div className="relative">
                     <FiUsers className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-pink-500" />
                     <Input type="number" className="rounded-2xl pl-12 w-full" />
@@ -176,16 +178,13 @@ export function EditModal({ room }) {
                   <FieldError />
                 </TextField>
 
-                {/* Hourly Rate */}
                 <TextField
                   name="hourlyRate"
                   defaultValue={hourlyRate}
                   type="number"
                   isRequired
                 >
-                  <Label className="mb-3 text-sm font-bold text-gray-700">
-                    Hourly Rate ($)
-                  </Label>
+                  <Label className="mb-3 text-sm font-bold text-gray-700">Hourly Rate ($)</Label>
                   <div className="relative">
                     <FiDollarSign className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-orange-500" />
                     <Input type="number" className="rounded-2xl pl-12 w-full" />
@@ -194,11 +193,9 @@ export function EditModal({ room }) {
                 </TextField>
               </div>
 
-              {/* Image URL – optional */}
+              {/* Image URL */}
               <TextField name="image" defaultValue={image}>
-                <Label className="mb-3 text-sm font-bold text-gray-700">
-                  Image URL (optional)
-                </Label>
+                <Label className="mb-3 text-sm font-bold text-gray-700">Image URL (optional)</Label>
                 <div className="relative">
                   <FiImage className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-pink-500" />
                   <Input
@@ -211,21 +208,17 @@ export function EditModal({ room }) {
 
               {/* Description */}
               <TextField name="description" defaultValue={description} isRequired>
-                <Label className="mb-3 text-sm font-bold text-gray-700">
-                  Description
-                </Label>
+                <Label className="mb-3 text-sm font-bold text-gray-700">Description</Label>
                 <TextArea
-                  placeholder="Describe the study room environment, facilities, and atmosphere..."
+                  placeholder="Describe the study room environment..."
                   className="min-h-[140px] rounded-3xl w-full"
                 />
                 <FieldError />
               </TextField>
 
-              {/* Amenities – styled like AddRoomPage */}
+              {/* Amenities */}
               <div>
-                <Label className="mb-5 block text-sm font-bold text-gray-700">
-                  Amenities
-                </Label>
+                <Label className="mb-5 block text-sm font-bold text-gray-700">Amenities</Label>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {amenitiesOptions.map((amenity) => {
                     const isSelected = selectedAmenities.includes(amenity);
@@ -264,11 +257,11 @@ export function EditModal({ room }) {
                 </div>
               </div>
 
-              {/* Actions */}
+              {/* Action Buttons */}
               <div className="flex gap-3 pt-4">
                 <Button
                   type="button"
-                  slot="close"
+                  onPress={() => setIsOpen(false)}
                   className="flex-1 rounded-2xl border border-gray-300 bg-white font-semibold text-gray-700 hover:bg-gray-50"
                 >
                   Cancel
@@ -282,9 +275,9 @@ export function EditModal({ room }) {
                 </Button>
               </div>
             </form>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
