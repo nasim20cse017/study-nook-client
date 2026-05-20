@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import { FiCalendar, FiClock, FiDollarSign, FiMapPin, FiUsers, FiXCircle } from "react-icons/fi";
+import { ConfirmCancelModal } from "@/components/ConfirmCancelModal";   // ✅ only once
 
 export default function MyBookingsPage() {
   const router = useRouter();
@@ -13,12 +14,12 @@ export default function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState(null);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [bookingToCancel, setBookingToCancel] = useState(null);
 
-  // Fetch bookings when session is available
   useEffect(() => {
     if (sessionLoading) return;
     if (!session?.user?.id) {
-      // If not logged in, redirect to login or show message
       toast.info("Please login to view your bookings", { theme: "colored" });
       router.push("/login");
       return;
@@ -32,7 +33,6 @@ export default function MyBookingsPage() {
       const res = await fetch(`http://localhost:5001/bookings?userId=${session.user.id}`);
       const data = await res.json();
       if (res.ok) {
-        // Sort by date (newest first) and then by startTime
         const sorted = data.sort((a, b) => {
           if (a.date !== b.date) return new Date(b.date) - new Date(a.date);
           return a.startTime.localeCompare(b.startTime);
@@ -49,12 +49,16 @@ export default function MyBookingsPage() {
     }
   };
 
-  const handleCancel = async (bookingId) => {
-    if (!confirm("Are you sure you want to cancel this booking?")) return;
+  const handleCancelClick = (booking) => {
+    setBookingToCancel(booking);
+    setCancelModalOpen(true);
+  };
 
-    setCancellingId(bookingId);
+  const confirmCancel = async () => {
+    if (!bookingToCancel) return;
+    setCancellingId(bookingToCancel._id);
     try {
-      const res = await fetch(`http://localhost:5001/bookings/${bookingId}/cancel`, {
+      const res = await fetch(`http://localhost:5001/bookings/${bookingToCancel._id}/cancel`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: session.user.id }),
@@ -62,12 +66,13 @@ export default function MyBookingsPage() {
       const data = await res.json();
       if (res.ok) {
         toast.success("Booking cancelled successfully", { theme: "colored" });
-        // Update local state
         setBookings((prev) =>
           prev.map((b) =>
-            b._id === bookingId ? { ...b, status: "cancelled" } : b
+            b._id === bookingToCancel._id ? { ...b, status: "cancelled" } : b
           )
         );
+        setCancelModalOpen(false);
+        setBookingToCancel(null);
       } else {
         toast.error(data.message || "Failed to cancel booking", { theme: "colored" });
       }
@@ -79,7 +84,6 @@ export default function MyBookingsPage() {
     }
   };
 
-  // Helper to check if a booking can be cancelled (confirmed & future date)
   const canCancel = (booking) => {
     if (booking.status !== "confirmed") return false;
     const today = new Date();
@@ -101,13 +105,11 @@ export default function MyBookingsPage() {
 
   return (
     <section className="relative min-h-screen py-16">
-      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-orange-50"></div>
       <div className="absolute top-10 left-10 h-72 w-72 rounded-full bg-pink-300/20 blur-3xl"></div>
       <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full bg-orange-300/20 blur-3xl"></div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-12 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-pink-200 bg-white px-5 py-2 shadow-sm">
             <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-pink-500 to-orange-500"></span>
@@ -124,7 +126,6 @@ export default function MyBookingsPage() {
           </p>
         </div>
 
-        {/* Bookings List */}
         {bookings.length === 0 ? (
           <div className="rounded-3xl border border-pink-100 bg-white/80 p-12 text-center shadow-2xl backdrop-blur-sm">
             <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-pink-100 to-orange-100">
@@ -146,7 +147,6 @@ export default function MyBookingsPage() {
                 key={booking._id}
                 className="group overflow-hidden rounded-3xl border border-pink-100 bg-white/80 shadow-md transition-all duration-300 hover:shadow-2xl backdrop-blur-sm"
               >
-                {/* Room Image */}
                 <div className="relative h-48 w-full overflow-hidden">
                   {booking.image ? (
                     <Image
@@ -160,7 +160,6 @@ export default function MyBookingsPage() {
                       <FiMapPin className="h-12 w-12 text-pink-400" />
                     </div>
                   )}
-                  {/* Status Badge */}
                   <div className="absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-bold shadow-md backdrop-blur-sm">
                     {booking.status === "confirmed" ? (
                       <span className="bg-green-500/80 text-white px-2 py-0.5 rounded-full">Confirmed</span>
@@ -171,9 +170,7 @@ export default function MyBookingsPage() {
                 </div>
 
                 <div className="p-5">
-                  {/* Room Name */}
                   <h3 className="mb-2 text-xl font-bold text-gray-800">{booking.roomName}</h3>
-                  {/* Floor & Capacity */}
                   <div className="mb-3 flex flex-wrap gap-3 text-sm text-gray-600">
                     <span className="flex items-center gap-1">
                       <FiMapPin className="text-pink-500" /> Floor {booking.floor}
@@ -182,7 +179,6 @@ export default function MyBookingsPage() {
                       <FiUsers className="text-orange-500" /> Up to {booking.capacity}
                     </span>
                   </div>
-                  {/* Date & Time */}
                   <div className="mb-4 space-y-2 rounded-2xl bg-gray-50 p-3">
                     <div className="flex items-center gap-2 text-sm">
                       <FiCalendar className="text-pink-500" />
@@ -197,16 +193,14 @@ export default function MyBookingsPage() {
                       <span>Total: ${booking.totalCost}</span>
                     </div>
                   </div>
-                  {/* Special Note (if any) */}
                   {booking.specialNote && (
                     <p className="mb-4 text-sm italic text-gray-500 border-l-2 border-pink-300 pl-2">
                       “{booking.specialNote}”
                     </p>
                   )}
-                  {/* Cancel Button */}
                   {canCancel(booking) && (
                     <button
-                      onClick={() => handleCancel(booking._id)}
+                      onClick={() => handleCancelClick(booking)}
                       disabled={cancellingId === booking._id}
                       className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl border border-red-200 bg-white py-2 font-semibold text-red-500 transition-all hover:bg-red-50 disabled:opacity-50"
                     >
@@ -226,6 +220,16 @@ export default function MyBookingsPage() {
           </div>
         )}
       </div>
+
+      <ConfirmCancelModal
+        isOpen={cancelModalOpen}
+        onClose={() => {
+          setCancelModalOpen(false);
+          setBookingToCancel(null);
+        }}
+        onConfirm={confirmCancel}
+        booking={bookingToCancel}
+      />
     </section>
   );
 }
