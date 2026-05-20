@@ -16,7 +16,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { EditModal } from "@/components/EditModal";
 import {DeleteAlert} from "@/components/DeleteAlert";
-import BookingCard from "@/components/BookingCard";
+import {BookingCard} from "@/components/BookingCard";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
