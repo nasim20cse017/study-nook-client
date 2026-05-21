@@ -13,7 +13,6 @@ import {
   FiArrowLeft,
 } from "react-icons/fi";
 
-import { authClient } from "@/lib/auth-client";
 import { EditModal } from "@/components/EditModal";
 import {DeleteAlert} from "@/components/DeleteAlert";
 import {BookingCard} from "@/components/BookingCard";
@@ -28,13 +27,23 @@ export const metadata = {
 const RoomDetailsPage = async ({ params }) => {
   const { id } = await params;
 
+    const {token} = await auth.api.getToken({
+    headers: await headers()
+  })
+
+
+//   console.log('token', token)
   // Fetch Room
-  const res = await fetch(
-    `http://localhost:5001/rooms/${id}`,
-    {
-      cache: "no-store",
+
+
+  const res = await fetch(  `http://localhost:5001/rooms/${id}`, 
+   {
+    headers: {
+      authorization: `Bearer ${token}`
     }
-  );
+}
+  )
+
 
 //   const resp = await fetch("http://localhost:5001/bookings", {
 //     cache: "no-store",
@@ -45,6 +54,7 @@ const RoomDetailsPage = async ({ params }) => {
   
 
   const room = await res.json();
+  
 
   
 
