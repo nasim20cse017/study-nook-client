@@ -3,6 +3,10 @@ import { CommunitySection } from "@/components/CommunitySection";
 import Featured from "@/components/Featured";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 
+export const metadata = {
+  title: "StudyNook – Home Page",
+};
+
 
 
 export default function Home() {

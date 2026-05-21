@@ -6,7 +6,9 @@ import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import { FiCalendar, FiClock, FiDollarSign, FiMapPin, FiUsers, FiXCircle } from "react-icons/fi";
-import { ConfirmCancelModal } from "@/components/ConfirmCancelModal";   // ✅ only once
+import { ConfirmCancelModal } from "@/components/ConfirmCancelModal"; 
+
+
 
 export default function MyBookingsPage() {
   const router = useRouter();

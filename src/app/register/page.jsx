@@ -28,6 +28,10 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 
+export const metadata = {
+  title: "StudyNook – Register",
+};
+
 const RegisterPage = () => {
   const router = useRouter();
 

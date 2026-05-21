@@ -19,8 +19,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "StudyNook",
-  description: "Modern Study Room Booking Platform",
+  title: "StudyNook – Home",
+    description: "Modern Study Room Booking Platform",
+
 };
 
 export default function RootLayout({ children }) {

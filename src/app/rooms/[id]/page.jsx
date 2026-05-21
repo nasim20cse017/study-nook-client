@@ -20,6 +20,10 @@ import {BookingCard} from "@/components/BookingCard";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
+export const metadata = {
+  title: "StudyNook – Room Details",
+};
+
 
 const RoomDetailsPage = async ({ params }) => {
   const { id } = await params;

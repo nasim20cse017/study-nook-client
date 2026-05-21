@@ -10,7 +10,9 @@ import {
   FiAlertCircle,
 } from "react-icons/fi";
 
-
+export const metadata = {
+  title: "StudyNook – Available Rooms",
+};
 
 const RoomsPage = async () => {
 

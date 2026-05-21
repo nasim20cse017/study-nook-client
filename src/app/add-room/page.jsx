@@ -33,6 +33,8 @@ const amenitiesOptions = [
   "Air Conditioning",
 ];
 
+
+
 const AddRoomPage = () => {
   const router = useRouter();
 

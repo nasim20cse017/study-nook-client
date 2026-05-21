@@ -7,6 +7,10 @@ import Link from "next/link";
 
 import { FiArrowLeft, FiHome } from "react-icons/fi";
 
+export const metadata = {
+  title: "StudyNook – Not Found",
+};
+
 const NotFound = () => {
   return (
     <section className="relative flex  items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-orange-50 px-4 py-16">
