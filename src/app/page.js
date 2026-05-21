@@ -1,5 +1,6 @@
 import Banner from "@/components/Banner";
 import { CommunitySection } from "@/components/CommunitySection";
+import Featured from "@/components/Featured";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 
 
@@ -16,6 +17,7 @@ export default function Home() {
 
       <div className="relative z-10">
         <Banner />
+        <Featured />
         <WhyChooseUs />
         <CommunitySection />
       </div>
