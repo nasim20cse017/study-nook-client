@@ -14,7 +14,7 @@ const Featured = async () => {
     // ✅ Fetch only the latest 6 rooms from the database
     // Sorted by newest first (using _id descending) and limit 6
     const res = await fetch(
-        "http://localhost:5001/featured",
+       `${process.env.NEXT_PUBLIC_SERVER_URL}/featured`,
         {
             cache: "no-store",
         }
@@ -25,7 +25,7 @@ const Featured = async () => {
     // ✅ Fallback: if backend doesn't support query params, sort & slice client‑side
     if (!Array.isArray(rooms) || rooms.length === 0) {
         // In case the API returns all rooms, we manually take the latest 6
-        const allRoomsRes = await fetch("http://localhost:5001/rooms", {
+        const allRoomsRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms`, {
             cache: "no-store",
         });
         const allRooms = await allRoomsRes.json();

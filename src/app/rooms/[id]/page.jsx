@@ -36,7 +36,7 @@ const RoomDetailsPage = async ({ params }) => {
   // Fetch Room
 
 
-  const res = await fetch(  `http://localhost:5001/rooms/${id}`, 
+  const res = await fetch(  `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`, 
    {
     headers: {
       authorization: `Bearer ${token}`
@@ -45,11 +45,6 @@ const RoomDetailsPage = async ({ params }) => {
   )
 
 
-//   const resp = await fetch("http://localhost:5001/bookings", {
-//     cache: "no-store",
-//   });
-
-//   const bookings = await resp.json();
 
   
 
@@ -74,7 +69,7 @@ const RoomDetailsPage = async ({ params }) => {
   } = room;
 
   const resp = await fetch(
-  `http://localhost:5001/bookings/${id}`
+  `${process.env.NEXT_PUBLIC_SERVER_URL}/bookings/${id}`
 );
 
 const data = await resp.json();

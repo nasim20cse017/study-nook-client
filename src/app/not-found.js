@@ -1,4 +1,3 @@
-// src/app/not-found.js
 
 "use client";
 
@@ -7,9 +6,6 @@ import Link from "next/link";
 
 import { FiArrowLeft, FiHome } from "react-icons/fi";
 
-export const metadata = {
-  title: "StudyNook – Not Found",
-};
 
 const NotFound = () => {
   return (

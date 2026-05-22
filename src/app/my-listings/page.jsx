@@ -55,7 +55,7 @@ export default function MyListingsPage() {
         setLoading(true);
         try {
             const { data: tokenData } = await authClient.token();
-            const res = await fetch(`http://localhost:5001/rooms`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms`, {
                 headers: { authorization: `Bearer ${tokenData?.token}` },
             });
             const data = await res.json();
@@ -103,7 +103,7 @@ export default function MyListingsPage() {
             if (!updatedRoom.image) updatedRoom.image = editingRoom.image;
 
             const { data: tokenData } = await authClient.token();
-            const res = await fetch(`http://localhost:5001/rooms/${editingRoom._id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${editingRoom._id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -141,7 +141,7 @@ export default function MyListingsPage() {
         setIsDeleting(true);
         try {
             const { data: tokenData } = await authClient.token();
-            const res = await fetch(`http://localhost:5001/rooms/${deletingRoom._id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${deletingRoom._id}`, {
                 method: "DELETE",
                 headers: { authorization: `Bearer ${tokenData?.token}` },
             });
@@ -185,7 +185,7 @@ export default function MyListingsPage() {
                         Manage all the study rooms you have listed
                     </p>
                     <button
-                        onClick={() => router.push("/rooms/create")}
+                        onClick={() => router.push("/add-room")}
                         className="mt-4 rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 px-6 py-2 font-semibold text-white shadow-md transition-all hover:scale-[1.01] hover:shadow-lg"
                     >
                         + Add New Room

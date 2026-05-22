@@ -47,7 +47,7 @@ const RoomsPage = () => {
   const fetchRooms = async () => {
     setLoading(true);
     const query = buildQuery();
-    const url = `http://localhost:5001/rooms${query ? `?${query}` : ""}`;
+    const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms${query ? `?${query}` : ""}`;
     try {
       const res = await fetch(url, { cache: "no-store" });
       const data = await res.json();

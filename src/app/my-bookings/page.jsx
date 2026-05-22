@@ -32,7 +32,7 @@ export default function MyBookingsPage() {
         try {
             const { data: tokenData } = await authClient.token();
             // Fetch all bookings (or use query param if it works)
-            const res = await fetch(`http://localhost:5001/bookings`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings`, {
                 headers: {
                     authorization: `Bearer ${tokenData?.token}`
                 },
@@ -69,7 +69,7 @@ export default function MyBookingsPage() {
         setCancellingId(bookingToCancel._id);
         try {
             const { data: tokenData } = await authClient.token();
-            const res = await fetch(`http://localhost:5001/bookings/${bookingToCancel._id}/cancel`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings/${bookingToCancel._id}/cancel`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

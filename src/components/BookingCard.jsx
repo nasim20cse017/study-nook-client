@@ -126,7 +126,7 @@ export function BookingCard({ room }) {
             };
 
             const {data:tokenData} = await authClient.token()
-            const res = await fetch("http://localhost:5001/bookings", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
                       authorization: `Bearer ${tokenData?.token}`
