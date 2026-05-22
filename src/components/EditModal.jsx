@@ -96,8 +96,7 @@ export function EditModal({ room }) {
             if (res.ok) {
                 toast.success("Room updated successfully");
                 router.refresh();
-                setIsOpen(false); // ✅ closes modal on success
-            } else {
+                setIsOpen(false); // 
                 toast.error(data?.message || "Failed to update room");
             }
         } catch (error) {
