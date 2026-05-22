@@ -1,4 +1,6 @@
 
+# StudyNook – Library Study Room Booking
+
 **Live Site URL:** https://study-nook-client-one.vercel.app
 
 ## 📌 Project Overview
