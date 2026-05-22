@@ -2,7 +2,7 @@ import MyBookings from '@/components/MyBookings';
 import React from 'react';
 
 export const metadata = {
-  title: "StudyNook – My Listings",
+  title: "StudyNook – My Bookings",
 };
 
 
